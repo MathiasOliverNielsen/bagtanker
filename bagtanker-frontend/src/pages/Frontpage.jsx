@@ -1,9 +1,10 @@
 import styles from "./Frontpage.module.scss";
+import { Header } from "../components/Header/Header.jsx";
 
 export function Frontpage() {
   return (
     <div className={styles.bgImgcontainer}>
-      <h1>Frontpage</h1>
+      <Header showProductNav={false} />
     </div>
   );
 }

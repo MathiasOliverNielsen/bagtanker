@@ -1,6 +1,9 @@
 .bgImgcontainer {
   background-image: url("../assets/bg-imgs/BreadImageOne.png");
   background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   min-height: 100vh;
   width: 100%;
+  position: relative;
 }

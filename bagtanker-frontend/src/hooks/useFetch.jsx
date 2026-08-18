@@ -8,7 +8,8 @@ export function useFetch(url) {
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await fetch(url);
+        const apiUrl = `${import.meta.env.VITE_PUBLIC_API_URL}${url}`;
+        const res = await fetch(apiUrl);
         if (!res.ok) {
           throw new Error();
         }

@@ -1,0 +1,88 @@
+@use "../../styles/variables" as *;
+@import url("https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap");
+
+.footerContainer {
+  background-color: $color-darkGrey;
+  color: $color-lightGrey;
+  padding: $spacing-large;
+  display: flex;
+  justify-content: space-between;
+  gap: $spacing-large;
+}
+
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-medium;
+  padding-left: 8rem;
+
+  h3 {
+    margin: 0;
+    font-family: "Irish Grover", cursive;
+    font-weight: 400;
+    font-size: 42px;
+    color: $color-lightGrey;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-small;
+  }
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-medium;
+  padding-right: 8rem;
+  align-items: flex-end;
+
+  h3 {
+    margin: 0;
+    color: white;
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    font-size: 28px;
+  }
+
+  p {
+    margin: 0;
+    color: white;
+  }
+
+  input {
+    padding: $spacing-small;
+    border: none;
+    background: #fff;
+    color: $color-lightGrey;
+    border-radius: 5px;
+    max-width: 370px;
+    min-width: 300px;
+
+    &::placeholder {
+      color: #666666;
+      opacity: 0.7;
+    }
+  }
+
+  button {
+    padding: $spacing-small $spacing-medium;
+    color: white;
+    background-color: $color-blueGrey;
+    border: none;
+    border-radius: 5px;
+    max-width: 150px;
+    min-width: 150px;
+    cursor: pointer;
+    transition: opacity $transition-smooth;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
