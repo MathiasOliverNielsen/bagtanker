@@ -55,6 +55,12 @@
     color: white;
   }
 
+  .newsletterForm {
+    display: flex;
+    gap: $spacing-small;
+    align-items: center;
+  }
+
   input {
     padding: $spacing-small;
     border: none;
@@ -63,10 +69,16 @@
     border-radius: 5px;
     max-width: 370px;
     min-width: 300px;
+    flex: 1;
 
     &::placeholder {
       color: #666666;
       opacity: 0.7;
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
   }
 
@@ -80,9 +92,36 @@
     min-width: 150px;
     cursor: pointer;
     transition: opacity $transition-smooth;
+    white-space: nowrap;
 
-    &:hover {
+    &:hover:not(:disabled) {
       opacity: 0.8;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .message {
+    font-size: 14px;
+    padding: $spacing-small $spacing-medium;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    color: white;
+
+    &.success {
+      background-color: #4caf50;
+    }
+
+    &.error {
+      background-color: #f44336;
+    }
+
+    &.loading {
+      background-color: $color-blueGrey;
     }
   }
 }
@@ -110,9 +149,24 @@
       font-size: 20px;
     }
 
+    .newsletterForm {
+      flex-direction: column;
+      width: 100%;
+    }
+
     input {
       max-width: 100%;
       min-width: auto;
+      width: 100%;
+    }
+
+    button {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .message {
+      width: 100%;
     }
   }
 }
