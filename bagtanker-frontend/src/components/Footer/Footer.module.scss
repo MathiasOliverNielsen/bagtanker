@@ -86,3 +86,33 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .footerContainer {
+    flex-direction: column;
+    gap: $spacing-medium;
+    padding: $spacing-medium;
+  }
+
+  .leftSection {
+    padding-left: $spacing-medium;
+
+    h3 {
+      font-size: 28px;
+    }
+  }
+
+  .rightSection {
+    padding-right: $spacing-medium;
+    align-items: flex-start;
+
+    h3 {
+      font-size: 20px;
+    }
+
+    input {
+      max-width: 100%;
+      min-width: auto;
+    }
+  }
+}

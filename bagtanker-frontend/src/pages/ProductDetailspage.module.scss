@@ -162,8 +162,10 @@
 }
 
 .comment {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
   border-bottom: 1px solid #eee;
 
   &:last-child {
@@ -171,17 +173,37 @@
     margin-bottom: 0;
     padding-bottom: 0;
   }
+}
+
+.commentAvatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.commentContent {
+  flex: 1;
 
   strong {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-size: 16px;
   }
 
   p {
-    margin: 0;
+    margin: 0.75rem 0 0 0;
     color: #666;
     line-height: 1.6;
   }
+}
+
+.commentDate {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 0.5rem;
 }
 
 .commentForm {

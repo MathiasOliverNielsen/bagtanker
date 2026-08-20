@@ -15,25 +15,47 @@ export function ProductDetailspage() {
         const res = await fetch(`${apiUrl}/api/products/${id}`);
         const data = await res.json();
         setProduct(data);
+        return data;
       } catch (err) {
         console.error("Error fetching product:", err);
+        return null;
       }
     };
 
-    const fetchComments = async () => {
+    const fetchComments = async (productId) => {
       const apiUrl = import.meta.env.VITE_PUBLIC_API_URL;
       try {
-        const res = await fetch(`${apiUrl}/api/products/${id}/comments`);
-        const data = await res.json();
-        setComments(data || []);
+        const [byProductRes, allReviewsRes] = await Promise.all([
+          fetch(`${apiUrl}/api/reviews/byProductId/${productId}`),
+          fetch(`${apiUrl}/api/reviews`),
+        ]);
+        const byProduct = await byProductRes.json();
+        const allReviews = await allReviewsRes.json();
+
+        const productReviews = Array.isArray(allReviews)
+          ? allReviews.filter((r) => r.productId === productId)
+          : [];
+
+        const mergedComments = Array.isArray(byProduct)
+          ? byProduct.map((comment, index) => ({
+              ...comment,
+              createdAt: productReviews[index]?.createdAt,
+              id: productReviews[index]?.id,
+            }))
+          : [];
+
+        setComments(mergedComments);
       } catch (err) {
         console.error("Error fetching comments:", err);
+        setComments([]);
       }
     };
 
     const load = async () => {
-      await fetchProduct();
-      await fetchComments();
+      const product = await fetchProduct();
+      if (product?.id) {
+        await fetchComments(product.id);
+      }
       setLoading(false);
     };
 
@@ -112,12 +134,30 @@ export function ProductDetailspage() {
           </form>
 
           <div className={styles.commentsList}>
-            {comments.map((comment) => (
-              <div key={comment.id} className={styles.comment}>
-                <strong>{comment.name}</strong>
-                <p>{comment.text}r</p>
-              </div>
-            ))}
+            {comments.map((comment, index) => {
+              const userName = comment.user
+                ? `${comment.user.firstname} ${comment.user.lastname}`
+                : `User ${comment.userId}`;
+
+              return (
+                <div key={index} className={styles.comment}>
+                  <img src="/imgs/randomComent.svg" alt={userName} className={styles.commentAvatar} />
+                  <div className={styles.commentContent}>
+                    <strong>{userName}</strong>
+                    {comment.createdAt && (
+                      <time className={styles.commentDate}>
+                        {new Date(comment.createdAt).toLocaleDateString("da-DK", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </time>
+                    )}
+                    <p>{comment.comment}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
       </article>

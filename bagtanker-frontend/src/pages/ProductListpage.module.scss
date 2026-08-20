@@ -19,9 +19,6 @@
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 2rem;
 
   h1 {
@@ -31,9 +28,20 @@
   }
 }
 
+.sortWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
 .sortDropdown {
-  width: 200px;
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   background: white;

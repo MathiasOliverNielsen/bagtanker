@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import styles from "./ProductCard.module.scss";
 
 export function ProductCard({ product }) {
@@ -12,7 +13,7 @@ export function ProductCard({ product }) {
         <h2 className={styles.title}>{product.title}</h2>
         <p className={styles.description}>{product.description}</p>
         <footer className={styles.footer}>
-          <a href={`/products/${product.slug}`} className={styles.button}>Læs mere</a>
+          <Link to={`/products/${product.slug}`} className={styles.button}>Læs mere</Link>
           <button className={styles.heart}>♡</button>
         </footer>
       </div>

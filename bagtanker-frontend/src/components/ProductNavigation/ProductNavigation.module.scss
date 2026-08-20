@@ -3,24 +3,31 @@
 .productNav {
   background-color: $color-darkGrey;
   padding: $spacing-medium $spacing-large;
+}
 
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: $spacing-large;
-    align-items: center;
-    justify-content: flex-start;
+.categories {
+  display: flex;
+  gap: $spacing-large;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
 
-    li {
-      color: $color-lightGrey;
-      cursor: pointer;
-      transition: color $transition-smooth;
+.category {
+  color: $color-lightGrey;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color $transition-smooth;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 
-      &:hover {
-        color: $color-bakedYellow;
-      }
-    }
+  &:hover {
+    color: $color-bakedYellow;
+  }
+
+  &.active {
+    color: $color-bakedYellow;
   }
 }
