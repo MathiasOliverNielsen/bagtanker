@@ -2,7 +2,7 @@ import { Navigation } from "../Navigation/Navigation";
 import { ProductNavigation } from "../ProductNavigation/ProductNavigation";
 import styles from "./Header.module.scss";
 
-export function Header({ showProductNav = false, selectedCategory, onSelectCategory }) {
+export function Header({ showProductNav = false }) {
   return (
     <header className={`${styles.headerWrapper} ${showProductNav ? styles.withBackground : ""}`}>
       <div className={styles.header}>
@@ -16,7 +16,7 @@ export function Header({ showProductNav = false, selectedCategory, onSelectCateg
         </div>
       </div>
 
-      {showProductNav && <ProductNavigation selectedCategory={selectedCategory} onSelectCategory={onSelectCategory} />}
+      {showProductNav && <ProductNavigation />}
     </header>
   );
 }

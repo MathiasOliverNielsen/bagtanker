@@ -1,0 +1,241 @@
+@use "../styles/variables" as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background-color: white;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.pageTitle {
+  margin: 0 0 2rem 0;
+  font-size: 32px;
+}
+
+.topSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  align-items: flex-start;
+}
+
+.productSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.image {
+  width: 400px;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.productSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.info {
+  flex: 1;
+}
+
+.description {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 1.5rem 0;
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+.procedure {
+  padding: 1.5rem;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.6;
+  }
+}
+
+.recipe {
+  padding: 2rem;
+  border-radius: 8px;
+  height: fit-content;
+  align-self: start;
+
+  h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.recipeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $color-blueGrey;
+  padding: 1rem;
+  margin: -2rem -2rem 1.5rem -2rem;
+  border-radius: 8px 8px 0 0;
+
+  h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+}
+
+.likes {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.likeIcon {
+  font-size: 30px;
+}
+
+.columnsWrapper {
+  margin-top: 1.5rem;
+}
+
+.column {
+  h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      font-size: 14px;
+      padding: 0.35rem 0;
+    }
+  }
+}
+
+.comments {
+  margin-bottom: 3rem;
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.commentsList {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  min-height: 100px;
+}
+
+.comment {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+  }
+}
+
+.commentForm {
+  max-width: 40%;
+  padding: 2rem;
+
+  h3 {
+    margin-top: 0;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+
+    &:focus {
+      outline: none;
+      border-color: #ffb719;
+    }
+  }
+
+  button {
+    background-color: #ffb719;
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .topSection {
+    grid-template-columns: 1fr;
+  }
+
+  .image {
+    width: 100%;
+    height: auto;
+  }
+
+  .recipe {
+    height: auto;
+  }
+}
