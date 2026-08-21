@@ -36,9 +36,7 @@ export function ProductListpage() {
 
     const fetchAllDetails = async () => {
       const apiUrl = import.meta.env.VITE_PUBLIC_API_URL;
-      const detailsPromises = productList.map((p) =>
-        fetch(`${apiUrl}/api/products/${p.slug}`).then((r) => r.json())
-      );
+      const detailsPromises = productList.map((p) => fetch(`${apiUrl}/api/products/${p.slug}`).then((r) => r.json()));
       const allDetails = await Promise.all(detailsPromises);
       setProducts(allDetails);
     };
@@ -81,13 +79,7 @@ export function ProductListpage() {
           </select>
         </div>
 
-        <section className={styles.grid}>
-          {sorted.length > 0 ? (
-            sorted.map((product) => <ProductCard key={product.id} product={product} />)
-          ) : (
-            <p>Ingen produkter fundet i denne kategori.</p>
-          )}
-        </section>
+        <section className={styles.grid}>{sorted.length > 0 ? sorted.map((product) => <ProductCard key={product.id} product={product} />) : <p>Ingen produkter fundet i denne kategori.</p>}</section>
       </article>
     </main>
   );

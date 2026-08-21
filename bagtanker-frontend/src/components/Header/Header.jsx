@@ -3,7 +3,7 @@ import { useLocation } from "react-router";
 import { Navigation } from "../Navigation/Navigation";
 import styles from "./Header.module.scss";
 
-export function Header({ showProductNav = false, showBackground = false }) {
+export function Header({ showBackground = false }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const isFrontpage = location.pathname === "/";
@@ -21,20 +21,14 @@ export function Header({ showProductNav = false, showBackground = false }) {
       <div className={styles.header}>
         <img src="/imgs/Logo.svg" alt="Logo" className={styles.logo} />
 
+        {/*Fra en opgave jeg lavede på grundforløbet, som jeg har tilpasset til dette projekt. */}
+
         <div className={styles.burgerMenu}>
-          <button
-            onClick={toggleMenu}
-            className={styles.burgerButton}
-            aria-label="Menu"
-          >
+          <button onClick={toggleMenu} className={styles.burgerButton} aria-label="Menu">
             <img src="/src/assets/bg-imgs/Navigation.svg" alt="Menu" className={styles.burgerIcon} />
           </button>
           <nav className={`${styles.navModal} ${isMenuOpen ? styles.open : ""}`}>
-            <button
-              onClick={closeMenu}
-              className={styles.closeButton}
-              aria-label="Luk menu"
-            >
+            <button onClick={closeMenu} className={styles.closeButton} aria-label="Luk menu">
               ✕
             </button>
             <Navigation onNavigate={closeMenu} />

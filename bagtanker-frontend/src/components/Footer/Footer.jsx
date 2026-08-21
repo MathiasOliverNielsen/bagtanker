@@ -10,6 +10,7 @@ export function Footer() {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
+  // Tilmeld nyhedsbrev
   const handleSubscribe = async (e) => {
     e.preventDefault();
 
@@ -30,7 +31,6 @@ export function Footer() {
 
     try {
       const apiUrl = import.meta.env.VITE_PUBLIC_API_URL;
-      console.log("Subscribing to newsletter with email:", email);
 
       const response = await fetch(`${apiUrl}/api/newsletters`, {
         method: "POST",
@@ -39,12 +39,6 @@ export function Footer() {
         },
         body: new URLSearchParams({ email }),
       });
-
-      console.log("Response status:", response.status);
-      console.log("Response headers:", response.headers);
-
-      const responseText = await response.text();
-      console.log("Response body:", responseText);
 
       if (response.ok) {
         setStatus("success");

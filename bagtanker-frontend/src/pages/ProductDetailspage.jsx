@@ -1,12 +1,21 @@
 import { useParams } from "react-router";
+import { Link } from "react-router";
 import { useState, useEffect } from "react";
+import { useAuth } from "../auth/AuthContext";
+import { getAuthHeader } from "../auth/authApi";
 import styles from "./ProductDetailspage.module.scss";
 
 export function ProductDetailspage() {
   const { id } = useParams();
+  const { user, isAuthenticated } = useAuth();
   const [product, setProduct] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [commentText, setCommentText] = useState("");
+  const [rating, setRating] = useState(5);
+  const [submitting, setSubmitting] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -22,19 +31,15 @@ export function ProductDetailspage() {
       }
     };
 
+    // Henter kommentarer fra 2 endpoints og fusionerer dataene fordi database ikke returnerer createdAt og id i byProductId endpoint
     const fetchComments = async (productId) => {
       const apiUrl = import.meta.env.VITE_PUBLIC_API_URL;
       try {
-        const [byProductRes, allReviewsRes] = await Promise.all([
-          fetch(`${apiUrl}/api/reviews/byProductId/${productId}`),
-          fetch(`${apiUrl}/api/reviews`),
-        ]);
+        const [byProductRes, allReviewsRes] = await Promise.all([fetch(`${apiUrl}/api/reviews/byProductId/${productId}`), fetch(`${apiUrl}/api/reviews`)]);
         const byProduct = await byProductRes.json();
         const allReviews = await allReviewsRes.json();
 
-        const productReviews = Array.isArray(allReviews)
-          ? allReviews.filter((r) => r.productId === productId)
-          : [];
+        const productReviews = Array.isArray(allReviews) ? allReviews.filter((r) => r.productId === productId) : [];
 
         const mergedComments = Array.isArray(byProduct)
           ? byProduct.map((comment, index) => ({
@@ -61,6 +66,102 @@ export function ProductDetailspage() {
 
     load();
   }, [id]);
+
+  // Indsend ny kommentar
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    if (!commentText.trim()) return;
+
+    setSubmitting(true);
+    const apiUrl = import.meta.env.VITE_PUBLIC_API_URL;
+
+    try {
+      const res = await fetch(`${apiUrl}/api/reviews`, {
+        method: "POST",
+        headers: {
+          ...getAuthHeader(),
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          title: product.title,
+          comment: commentText,
+          numStars: rating,
+          productId: product.id,
+          isActive: true,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Kunne ikke indsende kommentar");
+      }
+
+      const newComment = await res.json();
+      setComments([...comments, { ...newComment, user: { firstname: user.firstname, lastname: user.lastname } }]);
+      setCommentText("");
+      setRating(5);
+    } catch (err) {
+      console.error("Error submitting comment:", err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Rediger kommentar
+  const handleEditComment = async (id, newText) => {
+    if (!newText.trim()) return;
+
+    const comment = comments.find((c) => c.id === id);
+    if (!comment) return;
+
+    const apiUrl = import.meta.env.VITE_PUBLIC_API_URL;
+    try {
+      const res = await fetch(`${apiUrl}/api/reviews/${id}`, {
+        method: "PUT",
+        headers: {
+          ...getAuthHeader(),
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          title: comment.title,
+          comment: newText,
+          numStars: comment.numStars,
+          productId: comment.productId,
+          isActive: comment.isActive,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Kunne ikke opdatere kommentar");
+      }
+
+      setComments((prev) => prev.map((c) => (c.id === id ? { ...c, comment: newText } : c)));
+      setEditingId(null);
+      setEditText("");
+    } catch (err) {
+      console.error("Error updating comment:", err);
+    }
+  };
+
+  // Slet kommentar
+  const handleDeleteComment = async (id) => {
+    if (!confirm("Er du sikker?")) return;
+
+    const apiUrl = import.meta.env.VITE_PUBLIC_API_URL;
+    try {
+      const res = await fetch(`${apiUrl}/api/reviews/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeader(),
+      });
+
+      if (!res.ok) throw new Error("Kunne ikke slette kommentar");
+
+      setComments((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      console.error("Error deleting comment:", err);
+    }
+  };
 
   if (loading) return <main className={styles.pageContainer}>Loading...</main>;
   if (!product) return <main className={styles.pageContainer}>Produkt ikke fundet</main>;
@@ -126,21 +227,38 @@ export function ProductDetailspage() {
         <section className={styles.comments}>
           <h2>Kommentarer ({comments.length})</h2>
 
-          <form className={styles.commentForm} onSubmit={(e) => e.preventDefault()}>
-            <h3>Skriv en kommentar</h3>
-            <input type="text" placeholder="Dit navn" required />
-            <textarea placeholder="Din kommentar..." rows="5" required></textarea>
-            <button type="submit">Indsend kommentar</button>
-          </form>
+          {isAuthenticated ? (
+            <form className={styles.commentForm} onSubmit={handleSubmitComment}>
+              <h3>Skriv en kommentar</h3>
+              <div className={styles.formGroup}>
+                <label htmlFor="rating">Vurdering (1-5 stjerner)</label>
+                <select id="rating" value={rating} onChange={(e) => setRating(parseInt(e.target.value))} disabled={submitting}>
+                  <option value="1">1 stjerne</option>
+                  <option value="2">2 stjerner</option>
+                  <option value="3">3 stjerner</option>
+                  <option value="4">4 stjerner</option>
+                  <option value="5">5 stjerner</option>
+                </select>
+              </div>
+              <textarea placeholder="Din kommentar..." rows="5" required value={commentText} onChange={(e) => setCommentText(e.target.value)} disabled={submitting}></textarea>
+              <button type="submit" disabled={submitting}>
+                {submitting ? "Indlæser..." : "Indsend kommentar"}
+              </button>
+            </form>
+          ) : (
+            <div className={styles.loginPrompt}>
+              <p>Du skal være logget ind for at lave kommentarer</p>
+              <Link to="/login">Log ind her</Link>
+            </div>
+          )}
 
           <div className={styles.commentsList}>
-            {comments.map((comment, index) => {
-              const userName = comment.user
-                ? `${comment.user.firstname} ${comment.user.lastname}`
-                : `User ${comment.userId}`;
+            {comments.map((comment) => {
+              const userName = comment.user ? `${comment.user.firstname} ${comment.user.lastname}` : `User ${comment.userId}`;
+              const isOwnComment = user?.id === comment.userId;
 
               return (
-                <div key={index} className={styles.comment}>
+                <div key={comment.id} className={styles.comment}>
                   <img src="/imgs/randomComent.svg" alt={userName} className={styles.commentAvatar} />
                   <div className={styles.commentContent}>
                     <strong>{userName}</strong>
@@ -153,7 +271,39 @@ export function ProductDetailspage() {
                         })}
                       </time>
                     )}
-                    <p>{comment.comment}</p>
+                    {editingId === comment.id ? (
+                      <div className={styles.editForm}>
+                        <textarea value={editText} onChange={(e) => setEditText(e.target.value)} rows="3" />
+                        <div className={styles.editActions}>
+                          <button onClick={() => handleEditComment(comment.id, editText)} className={styles.saveButton}>
+                            Gem
+                          </button>
+                          <button onClick={() => setEditingId(null)} className={styles.cancelButton}>
+                            Annuller
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <p>{comment.comment}</p>
+                        {isOwnComment && (
+                          <div className={styles.actions}>
+                            <button
+                              onClick={() => {
+                                setEditingId(comment.id);
+                                setEditText(comment.comment);
+                              }}
+                              className={styles.editButton}
+                            >
+                              Rediger
+                            </button>
+                            <button onClick={() => handleDeleteComment(comment.id)} className={styles.deleteButton}>
+                              Slet
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
               );

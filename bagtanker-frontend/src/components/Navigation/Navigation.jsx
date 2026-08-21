@@ -1,10 +1,21 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { useAuth } from "../../auth/AuthContext";
 
 export function Navigation({ onNavigate }) {
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
   const handleClick = () => {
     if (onNavigate) {
       onNavigate();
     }
+  };
+
+  // Log ud
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    handleClick();
   };
 
   return (
@@ -22,9 +33,22 @@ export function Navigation({ onNavigate }) {
         <li>
           <NavLink to="/contact" onClick={handleClick}>Kontakt</NavLink>
         </li>
-        <li>
-          <NavLink to="/login" onClick={handleClick}>Login</NavLink>
-        </li>
+        {isAuthenticated ? (
+          <>
+            <li>
+              <NavLink to="/min-side" onClick={handleClick}>Min side</NavLink>
+            </li>
+            <li>
+              <button onClick={handleLogout} style={{ background: "none", border: "none", color: "white", cursor: "pointer", textDecoration: "none" }}>
+                Log ud
+              </button>
+            </li>
+          </>
+        ) : (
+          <li>
+            <NavLink to="/login" onClick={handleClick}>Login</NavLink>
+          </li>
+        )}
       </ul>
     </nav>
   );
