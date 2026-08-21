@@ -16,7 +16,15 @@ export async function signup(firstname, lastname, email, password) {
   const res = await fetch(`${API_URL}/api/users`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ firstname, lastname, email, password }),
+    body: new URLSearchParams({
+      firstname,
+      lastname,
+      email,
+      password,
+      refreshToken: '',
+      isActive: 'true',
+      image: 'http://placeimg.com/640/480',
+    }),
   });
   if (!res.ok) {
     const error = await res.text();
